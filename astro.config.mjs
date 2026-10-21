@@ -6,8 +6,21 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://github.com/JhosepSteeven-Software-Engineer/JhosepSteeven_Development',
+	// URL pública del sitio (la que usa GitHub Pages para este repositorio).
+	site: 'https://jhosepsteeven-software-engineer.github.io/JhosepSteeven_Development',
+	// GitHub Pages sirve los proyectos en /<nombre-del-repo>, así que Astro
+	// necesita saber que la raíz del sitio vive en esa subcarpeta.
+	base: '/JhosepSteeven_Development',
 	integrations: [mdx(), sitemap()],
+	markdown: {
+		// El fondo de los bloques de código lo pone global.css (para que
+		// coincida con el resto del diseño). Shiki solo pone los colores.
+		shikiConfig: {
+			theme: 'github-dark',
+			defaultColor: false,
+			wrap: true,
+		},
+	},
 	fonts: [
 		{
 			provider: fontProviders.local(),

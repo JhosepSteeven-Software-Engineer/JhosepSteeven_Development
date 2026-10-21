@@ -1,0 +1,124 @@
+---
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../site.config';
+import { paths } from '../paths';
+
+interface Props {
+	title: string;
+	description?: string;
+	/** Imagen para Open Graph / Twitter. */
+	image?: string;
+	/** Texto visible del encabezado de la página (H1). */
+	heading?: string;
+	/** Texto introductorio debajo del H1. */
+	intro?: string;
+	/** Clase extra en <main>. */
+	mainClass?: string;
+}
+
+const {
+	title,
+	description = SITE.description,
+	image = '/og-default.png',
+	heading,
+	intro,
+	mainClass,
+} = Astro.props;
+
+const pageTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+// `Astro.site` no incluye el `base`, así que lo añadimos a mano.
+const ogImage = new URL(`${paths.base}${image.replace(/^\//, '')}`, Astro.site);
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href={`${paths.base}favicon.svg`} />
+		<link rel="icon" href={`${paths.base}favicon.ico`} />
+		<link rel="sitemap" href={`${paths.base}sitemap-index.xml`} />
+		<link
+			rel="alternate"
+			type="application/rss+xml"
+			title={`${SITE.name} — RSS`}
+			href={new URL(`${paths.base}rss.xml`, Astro.site)}
+		/>
+		<meta name="generator" content={Astro.generator} />
+		<meta name="author" content={SITE.fullName} />
+		<meta name="theme-color" content="#2337ff" />
+
+		<Font cssVariable="--font-atkinson" preload />
+
+		<link rel="canonical" href={canonicalURL} />
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:site_name" content={SITE.name} />
+		<meta property="og:locale" content="es_ES" />
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+	</head>
+
+	<body>
+		<a class="skip-link" href="#contenido">Saltar al contenido</a>
+		<Header />
+		<main id="contenido" class={mainClass}>
+			{
+				heading && (
+					<header class="page-header">
+						<h1>{heading}</h1>
+						{intro && <p class="page-header__intro">{intro}</p>}
+					</header>
+				)
+			}
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.skip-link {
+		position: absolute;
+		left: -9999px;
+		top: 0;
+		background: var(--accent);
+		color: #fff;
+		padding: 0.75rem 1rem;
+		z-index: 100;
+		border-radius: 0 0 8px 0;
+	}
+
+	.skip-link:focus {
+		left: 0;
+	}
+
+	.page-header {
+		margin-bottom: 2.5rem;
+	}
+
+	.page-header h1 {
+		font-size: clamp(2rem, 6vw, 3.052em);
+	}
+
+	.page-header__intro {
+		color: rgb(var(--gray));
+		font-size: 1.05em;
+		margin-top: 0.5rem;
+	}
+</style>

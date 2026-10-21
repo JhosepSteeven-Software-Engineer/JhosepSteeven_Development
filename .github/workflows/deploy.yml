@@ -1,20 +1,32 @@
 name: Deploy a GitHub Pages
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
+# No canceles un despliegue que ya está en marcha: deja que termine.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: withastro/action@v3
+      - name: Clonar el repositorio
+        uses: actions/checkout@v7
+
+      - name: Instalar dependencias, compilar y subir el sitio
+        uses: withastro/action@v6
         with:
           node-version: 24
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -22,5 +34,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

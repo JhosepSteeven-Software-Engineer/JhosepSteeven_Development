@@ -1,59 +1,275 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { SITE, SKILLS, PRINCIPLES } from '../site.config';
+import { paths } from '../paths';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout
+	title={SITE.name}
+	description={SITE.description}
+	mainClass="home"
+>
+	<section class="hero">
+		<p class="hero__eyebrow">{SITE.role}</p>
+		<h1 class="hero__title">{SITE.name}</h1>
+		<p class="hero__tagline">{SITE.tagline}</p>
+		<p class="hero__intro">
+			Soy ingeniero de software y trabajo en la intersección entre sistemas, automatización y
+			nube. Mi día a día transita entre banca y seguros, contenedores y tuberías de
+			integración, control de calidad y la administración de servidores Windows y Linux.
+		</p>
+		<p class="hero__intro">
+			No vengo del camino rápido. Aprendo despacio, pero lo que aprendo lo entiendo de verdad
+			y lo dejo documentado. Este sitio es mi bitácora: lo que sé, lo que estoy aprendiendo y
+			cómo lo voy ordenando.
+		</p>
+
+		<div class="hero__actions">
+			<a class="button button--primary" href={paths.about}>Sobre mí</a>
+			<a class="button" href={paths.blog}>Leer el blog</a>
+		</div>
+	</section>
+
+	<section class="section">
+		<h2 class="section__title">Encuéntrame en</h2>
+		<p class="section__subtitle">
+			Estos son mis canales reales. Escríbeme, sígueme o mira lo que estoy construyendo.
+		</p>
+		<SocialLinks layout="grid" showHandle />
+	</section>
+
+	<section class="section">
+		<h2 class="section__title">Dónde estoy trabajando</h2>
+		<p class="section__subtitle">
+			Las cuatro áreas en las que me estoy formando en serio, ordenadas como las ordeno yo:
+			de lo que sostiene el sistema hacia lo que lo protege.
+		</p>
+		<div class="skills">
+			{
+				SKILLS.map((group) => (
+					<div class="skill-card">
+						<h3>{group.title}</h3>
+						<ul>
+							{group.items.map((item) => (
+								<li>{item}</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<h2 class="section__title">Cómo trabajo</h2>
+		<p class="section__subtitle">
+			Cuatro reglas que me aplico y no rompo. No son eslóganes: son decisiones que tomo
+			todos los días.
+		</p>
+		<div class="principles">
+			{
+				PRINCIPLES.map((principle) => (
+					<article class="principle">
+						<h3>{principle.title}</h3>
+						<p>{principle.body}</p>
+					</article>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section section--cta">
+		<h2 class="section__title">¿Empezamos?</h2>
+		<p class="section__subtitle">
+			Si buscas a alguien que entienda de sistemas de principio a fin y no le shortcut al
+			entender, te invito a leer <a href={paths.about}>mi biografía</a> o a
+			<a href={paths.blog}>escribir en mi blog</a>.
+		</p>
+	</section>
+</BaseLayout>
+
+<style>
+	.home {
+		width: 960px;
+	}
+
+	/* --- Hero --- */
+	.hero {
+		text-align: center;
+		padding: 2rem 0 3rem;
+	}
+
+	.hero__eyebrow {
+		margin: 0;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		font-size: 0.8rem;
+		font-weight: 700;
+		color: var(--accent);
+	}
+
+	.hero__title {
+		margin: 0.4rem 0 0.2rem;
+		font-size: clamp(2.4rem, 8vw, 4rem);
+		letter-spacing: -0.02em;
+	}
+
+	.hero__tagline {
+		margin: 0 0 1.5rem;
+		font-size: 1.15rem;
+		color: rgb(var(--gray));
+	}
+
+	.hero__intro {
+		max-width: 620px;
+		margin: 0 auto 1rem;
+		text-align: left;
+	}
+
+	.hero__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		justify-content: center;
+		margin-top: 2rem;
+	}
+
+	.button {
+		display: inline-block;
+		padding: 0.75rem 1.5rem;
+		border-radius: 10px;
+		border: 1px solid rgb(var(--gray-light));
+		background: #fff;
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+		font-weight: 700;
+		transition: 0.2s ease;
+	}
+
+	.button:hover {
+		transform: translateY(-2px);
+		box-shadow: var(--box-shadow);
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	.button--primary {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #fff;
+	}
+
+	.button--primary:hover {
+		color: #fff;
+		background: var(--accent-dark);
+		border-color: var(--accent-dark);
+	}
+
+	/* --- Secciones --- */
+	.section {
+		margin: 4rem 0;
+	}
+
+	.section__title {
+		margin: 0 0 0.35rem;
+		font-size: clamp(1.5rem, 4vw, 2rem);
+	}
+
+	.section__subtitle {
+		margin: 0 0 1.75rem;
+		color: rgb(var(--gray));
+		max-width: 640px;
+	}
+
+	.section--cta {
+		padding: 2.5rem 1.5rem;
+		border-radius: 16px;
+		background: #fff;
+		box-shadow: var(--box-shadow);
+		text-align: center;
+	}
+
+	.section--cta .section__subtitle {
+		margin-inline: auto;
+	}
+
+	/* --- Tarjetas de skills --- */
+	.skills {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 1rem;
+	}
+
+	.skill-card {
+		padding: 1.25rem;
+		background: #fff;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 14px;
+		transition: 0.2s ease;
+	}
+
+	.skill-card:hover {
+		transform: translateY(-3px);
+		box-shadow: var(--box-shadow);
+		border-color: var(--accent);
+	}
+
+	.skill-card h3 {
+		margin: 0 0 0.75rem;
+		font-size: 1.05rem;
+	}
+
+	.skill-card ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.skill-card li {
+		font-size: 0.82rem;
+		padding: 0.25rem 0.6rem;
+		border-radius: 999px;
+		background: rgb(var(--gray-light));
+		color: rgb(var(--gray-dark));
+	}
+
+	/* --- Principios --- */
+	.principles {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 1rem;
+	}
+
+	.principle {
+		padding: 1.5rem;
+		background: #fff;
+		border-left: 4px solid var(--accent);
+		border-radius: 0 14px 14px 0;
+		box-shadow: 0 1px 3px rgba(var(--gray), 12%);
+	}
+
+	.principle h3 {
+		margin: 0 0 0.5rem;
+		font-size: 1.1rem;
+	}
+
+	.principle p {
+		margin: 0;
+		font-size: 0.95rem;
+		color: rgb(var(--gray));
+	}
+
+	@media (max-width: 720px) {
+		.hero {
+			padding-top: 1rem;
+		}
+
+		.section {
+			margin: 3rem 0;
+		}
+	}
+</style>

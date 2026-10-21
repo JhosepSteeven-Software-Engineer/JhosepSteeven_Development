@@ -1,0 +1,121 @@
+---
+import SocialIcon from './SocialIcon.astro';
+import { SOCIAL_LINKS, type SocialLink } from '../site.config';
+
+interface Props {
+	/** Lista de enlaces. Por defecto, todos los de `site.config.ts`. */
+	links?: SocialLink[];
+	/** `row` en línea horizontal, `grid` en tarjetas. */
+	layout?: 'row' | 'grid';
+	/** Muestra el usuario/handle junto al icono. */
+	showHandle?: boolean;
+	/** Clase extra del contenedor. */
+	class?: string;
+}
+
+const {
+	links = SOCIAL_LINKS,
+	layout = 'row',
+	showHandle = false,
+	class: className,
+} = Astro.props;
+---
+
+<ul class:list={['social-list', `social-list--${layout}`, className]}>
+	{
+		links.map((link) => (
+			<li class:list={['social-item', { 'is-pending': link.pending }]}>
+				<a
+					href={link.href}
+					target="_blank"
+					rel="me noopener noreferrer"
+					title={link.pending ? `${link.label} — pendiente de configurar` : link.label}
+				>
+					<span class="social-item__icon">
+						<SocialIcon name={link.icon} size={layout === 'grid' ? 26 : 22} />
+					</span>
+					{showHandle && <span class="social-item__handle">{link.handle}</span>}
+					{link.pending && <span class="social-item__badge">pendiente</span>}
+				</a>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.social-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.social-list--grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 1rem;
+	}
+
+	.social-item a {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.6rem 0.9rem;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 12px;
+		background: #fff;
+		color: rgb(var(--gray-dark));
+		text-decoration: none;
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease,
+			border-color 0.2s ease;
+	}
+
+	.social-list--row .social-item a {
+		padding: 0.4rem;
+		border: none;
+		background: none;
+	}
+
+	.social-item a:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+		transform: translateY(-2px);
+		box-shadow: var(--box-shadow);
+	}
+
+	.social-list--row .social-item a:hover {
+		box-shadow: none;
+	}
+
+	.social-item__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.social-item__handle {
+		font-size: 0.85rem;
+		overflow-wrap: anywhere;
+	}
+
+	.social-item__badge {
+		margin-left: auto;
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		padding: 0.15rem 0.45rem;
+		border-radius: 999px;
+		background: rgb(var(--gray-light));
+		color: rgb(var(--gray));
+	}
+
+	.social-item.is-pending a {
+		border-style: dashed;
+		color: rgb(var(--gray));
+	}
+</style>
